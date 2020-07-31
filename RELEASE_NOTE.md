@@ -1,5 +1,34 @@
 # OpenPAI Release Note
 
+## July 2020 (version 1.1.1)
+[minor release with hot fix](https://github.com/microsoft/pai/releases/tag/v1.1.1).
+
+## July 2020 (version 1.1.0)
+
+- Storage:
+  - Support readonly storage. (#4523)
+- Security
+  - If ssl is enabled, all requests will use https. (#4550)
+- Authentication
+  - Support nested AD group in AAD Mode. (#4639)
+- Marketplace
+  - Integrate with new version of [PAI marketplace](https://github.com/microsoft/openpaimarketplace).
+- Others
+  - Add stress test for PAI API. (#4665)
+  - Resolve job always retry for port conflict. (#4384)
+  - Webportal/VScode use JS SDK + SDK improvement. (#4660)
+  - Align webportal submit default value with backend. (#4682)
+  - Document enhance. (#4700)
+  - Fix tensorboard v2 the logdir is not correct issue.
+  - Fix webPortal submit job help link broken.
+  - Fix ssh barrier bug.
+
+For more details about this release, please refer to [detailed release note](https://github.com/microsoft/pai/releases/tag/v1.1.0).
+
+## May 2020 (version 1.0.1)
+
+[minor release with hot fix](https://github.com/microsoft/pai/releases/tag/v1.0.1).
+
 ## May 2020 (version 1.0.0)
 
 With the v1.0.0 release, OpenPAI is officially switching to pure Kubernetes-based architecture. In addition to this, we had also made efforts on making our component design more modularized by re-organized the code structure to 1 main repo together with 7 standalone key component repos.

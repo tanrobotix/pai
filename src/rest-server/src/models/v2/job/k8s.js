@@ -168,7 +168,7 @@ const convertFrameworkSummary = (framework) => {
     },
     retryDelayTime: framework.status.retryPolicyStatus.retryDelaySec,
     createdTime: new Date(framework.metadata.creationTimestamp).getTime(),
-    completedTime: new Date(framework.status.completionTime).getTime(),
+    completedTime: new Date(framework.status.completionTime).getTime() || null,
     appExitCode: completionStatus ? completionStatus.code : null,
     virtualCluster: framework.metadata.labels ? framework.metadata.labels.virtualCluster : 'unknown',
     totalGpuNumber: framework.metadata.annotations ? parseInt(framework.metadata.annotations.totalGpuNumber) : 0,
@@ -213,6 +213,8 @@ const convertTaskDetail = async (taskStatus, ports, logPathPrefix) => {
   const containerGpus = null;
 
   const completionStatus = taskStatus.attemptStatus.completionStatus;
+  const diagnostics = completionStatus ? completionStatus.diagnostics : null;
+  const exitDiagnostics = generateExitDiagnostics(diagnostics);
   return {
     taskIndex: taskStatus.index,
     taskState: convertState(
@@ -222,10 +224,19 @@ const convertTaskDetail = async (taskStatus, ports, logPathPrefix) => {
     ),
     containerId: taskStatus.attemptStatus.podUID,
     containerIp: taskStatus.attemptStatus.podHostIP,
+    containerNodeName: taskStatus.attemptStatus.podNodeName,
     containerPorts,
     containerGpus,
     containerLog: `http://${taskStatus.attemptStatus.podHostIP}:${process.env.LOG_MANAGER_PORT}/log-manager/tail/${logPathPrefix}/${taskStatus.attemptStatus.podUID}/`,
     containerExitCode: completionStatus ? completionStatus.code : null,
+    containerExitSpec: completionStatus ? generateExitSpec(completionStatus.code) : generateExitSpec(null),
+    containerExitDiagnostics: exitDiagnostics ? exitDiagnostics.diagnosticsSummary : null,
+    retries: taskStatus.retryPolicyStatus.totalRetriedCount,
+    accountableRetries: taskStatus.retryPolicyStatus.accountableRetriedCount,
+    createdTime: new Date(taskStatus.startTime).getTime() || null,
+    completedTime: new Date(taskStatus.completionTime).getTime() || null,
+    currentAttemptLaunchedTime: new Date(taskStatus.attemptStatus.runTime || taskStatus.attemptStatus.startTime).getTime() || null,
+    currentAttemptCompletedTime: new Date(taskStatus.attemptStatus.completionTime).getTime() || null,
     ...launcherConfig.enabledHived && {
       hived: {
         affinityGroupName,
@@ -274,12 +285,12 @@ const convertFrameworkDetail = async (framework) => {
       },
       retryDelayTime: framework.status.retryPolicyStatus.retryDelaySec,
       createdTime: new Date(framework.metadata.creationTimestamp).getTime(),
-      completedTime: new Date(framework.status.completionTime).getTime(),
+      completedTime: new Date(framework.status.completionTime).getTime() || null,
       appId: attemptStatus.instanceUID,
       appProgress: completionStatus ? 1 : 0,
       appTrackingUrl: '',
-      appLaunchedTime: new Date(attemptStatus.runTime || attemptStatus.completionTime).getTime(),
-      appCompletedTime: new Date(attemptStatus.completionTime).getTime(),
+      appLaunchedTime: new Date(attemptStatus.runTime || attemptStatus.completionTime).getTime() || null,
+      appCompletedTime: new Date(attemptStatus.completionTime).getTime() || null,
       appExitCode: completionStatus ? completionStatus.code : null,
       appExitSpec: completionStatus ? generateExitSpec(completionStatus.code) : generateExitSpec(null),
       appExitDiagnostics: exitDiagnostics ? exitDiagnostics.diagnosticsSummary : null,
