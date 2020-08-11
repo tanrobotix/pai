@@ -41,6 +41,13 @@ export default function TeamDetail({ isOpen = false, config, hide }) {
       headerClassName: FontClassNames.semibold,
       minWidth: 120,
       onRender: item => {
+        if (item.type === 'dshuttle') {
+          return (
+            <div
+              className={FontClassNames.small}
+            >{`/mnt/${item.name}/azurene`}</div>
+          );
+        }
         return (
           <div className={FontClassNames.small}>{`/mnt/${item.name}`}</div>
         );
@@ -320,6 +327,16 @@ export const NAS_TIPS = {
       <span> to upload data directly.</span>
     </div>
   ),
+  dshuttle: (
+    <div>
+      <div style={{ fontWeight: FontWeights.semibold }}>Dshuttle</div>
+      <span>
+        To upload data, please make sure your data is immutable. Then upload
+        your data to Dshuttle UFS (such as azure blob). You can find the
+        Dshuttle UFS in the path preview.
+      </span>
+    </div>
+  ),
 };
 
 export const SERVER_PATH = {
@@ -350,6 +367,12 @@ export const SERVER_PATH = {
   hdfs: storage => (
     <div className={FontClassNames.semibold}>
       <b>{`${storage.data.namenode}:${storage.data.port}`}</b>
+      {storage.data.path || '/'}
+    </div>
+  ),
+  dshuttle: storage => (
+    <div className={FontClassNames.semibold}>
+      <b>{`dshuttletestne.blob.core.windows.net/dshuttle`}</b>
       {storage.data.path || '/'}
     </div>
   ),

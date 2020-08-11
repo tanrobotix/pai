@@ -73,6 +73,9 @@ export async function fetchStorageDetails(configNames) {
     for (const storage of storageSummary.storages) {
       if (configNames.includes(storage.name)) {
         const detail = await client.storage.getStorage(storage.name);
+        if (detail.type === 'dshuttle') {
+          detail.readOnly = true;
+        }
         if (defaultStorageNames.includes(detail.name)) {
           detail.default = true;
         }

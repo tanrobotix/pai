@@ -44,6 +44,9 @@ function convertToTree(dataList) {
           mountItem.sourceType
         })`,
       ];
+    } else if (mountItem.sourceType === 'dshuttle-pvc') {
+      label = ['azureblob://dshuttletestne/dshuttle/ (cache mirror)'];
+      mountPrefixArray.push('/azurene');
     } else {
       label = mountItem.dataSource.split(', ');
     }
