@@ -138,6 +138,8 @@ class DatabaseModel {
           allowNull: false,
         },
         attemptIndex: Sequelize.INTEGER,
+        taskroleName: Sequelize.STRING(256),
+        taskIndex: Sequelize.INTEGER,
         taskUid: {
           type: Sequelize.STRING(36),
           allowNull: false,
