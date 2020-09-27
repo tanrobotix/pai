@@ -167,7 +167,7 @@ module Fluent::Plugin
       end
     end
 
-    def insert_framework(hex_id, time, record)
+    def insert_task(hex_id, time, record)
       # This function try to insert the task snapshot into task history table.
       # In some cases, the framework controller may have duplicate logs about one task attempt,
       # or there has been already successful inserted record before.
