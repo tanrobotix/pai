@@ -125,6 +125,46 @@ class DatabaseModel {
       },
     );
 
+    class TaskHistory extends Model {}
+    TaskHistory.init(
+      {
+        insertedAt: Sequelize.DATE,
+        uid: {
+          type: Sequelize.STRING(36),
+          primaryKey: true,
+        },
+        frameworkName: {
+          type: Sequelize.STRING(64),
+          allowNull: false,
+        },
+        attemptIndex: Sequelize.INTEGER,
+        taskUid: {
+          type: Sequelize.STRING(36),
+          allowNull: false,
+        },
+        taskAttemptIndex: Sequelize.INTEGER,
+        podUid: Sequelize.STRING(36),
+        historyType: {
+          type: Sequelize.STRING(16),
+          allowNull: false,
+          defaultValue: 'retry',
+        },
+        snapshot: Sequelize.TEXT,
+      },
+      {
+        sequelize,
+        modelName: 'task_history',
+        createdAt: 'insertedAt',
+        indexes: [
+          {
+            unique: false,
+            fields: ['frameworkName', 'attemptIndex'],
+          },
+        ],
+        freezeTableName: true,
+      },
+    );
+
     class Pod extends Model {}
     Pod.init(
       {
