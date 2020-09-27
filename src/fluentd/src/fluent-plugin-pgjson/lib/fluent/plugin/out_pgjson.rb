@@ -190,7 +190,7 @@ module Fluent::Plugin
       selectResult = thread[:conn].exec_params('SELECT uid from task_history where uid=$1', [uid])
       if selectResult.cmd_tuples == 0
           # if there is no existing records, try to insert a new one.
-          thread[:conn].exec_params("INSERT INTO framework_history (\"#{@insertedAt_col}\", \"#{@updatedAt_col}\", \"#{@uid_col}\", \"#{@frameworkName_col}\", \"#{@attemptIndex_col}\", " + 
+          thread[:conn].exec_params("INSERT INTO task_history (\"#{@insertedAt_col}\", \"#{@updatedAt_col}\", \"#{@uid_col}\", \"#{@frameworkName_col}\", \"#{@attemptIndex_col}\", " + 
             "\"#{@taskroleName_col}\", \"taskIndex\", \"taskUid\", \"#{@taskAttemptIndex_col}\", \"podUid\", \"#{@historyType_col}\", \"#{@snapshot_col}\") " +
             "VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)", [time, time, uid, frameworkName, attemptIndex, taskroleName, taskIndex, taskUid, taskAttemptIndex, podUid, historyType, snapshot]
           )
