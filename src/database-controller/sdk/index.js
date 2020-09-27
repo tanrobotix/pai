@@ -295,6 +295,7 @@ class DatabaseModel {
     );
 
     Framework.hasMany(FrameworkHistory);
+    Framework.hasMany(TaskHistory);
     Framework.hasMany(Pod);
     Framework.hasMany(FrameworkEvent);
     Framework.hasMany(PodEvent);
@@ -321,6 +322,7 @@ class DatabaseModel {
     this.sequelize = sequelize;
     this.Framework = Framework;
     this.FrameworkHistory = FrameworkHistory;
+    this.TaskHistory = TaskHistory;
     this.Pod = Pod;
     this.FrameworkEvent = FrameworkEvent;
     this.PodEvent = PodEvent;
@@ -336,6 +338,7 @@ class DatabaseModel {
       await Promise.all([
         this.Framework.sync({ alter: true }),
         this.FrameworkHistory.sync({ alter: true }),
+        this.TaskHistory.sync({ alter: true }),
         this.Pod.sync({ alter: true }),
         this.FrameworkEvent.sync({ alter: true }),
         this.PodEvent.sync({ alter: true }),
