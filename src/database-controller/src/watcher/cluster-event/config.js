@@ -14,6 +14,8 @@ const configSchema = Joi.object()
     maxRpcConcurrency: Joi.number()
       .integer()
       .required(),
+    diskPath: Joi.string.required(),
+    maxDiskUsagePercent: Joi.number().integer.required(),
   })
   .required();
 
@@ -21,6 +23,8 @@ const config = {
   dbConnectionStr: process.env.DB_CONNECTION_STR,
   maxDatabaseConnection: parseInt(process.env.MAX_DB_CONNECTION),
   maxRpcConcurrency: parseInt(process.env.MAX_RPC_CONCURRENCY),
+  diskPath: process.env.DISK_PATH,
+  maxDiskUsagePercent: parseInt(process.env.MAX_DISK_USAGE_PERCENT),
 };
 
 const { error, value } = Joi.validate(config, configSchema);

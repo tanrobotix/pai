@@ -152,10 +152,7 @@ function getFrameworkInformer(
 
 const coreV1Client = kc.makeApiClient(k8s.CoreV1Api);
 
-function getEventInformer(
-  timeoutSeconds = 365 * 86400,
-  namespace = 'default',
-) {
+function getEventInformer(timeoutSeconds = 365 * 86400, namespace = 'default') {
   /*
   The usage is very like `getFrameworkInformer`. Please see the comments of `getFrameworkInformer` for reference.
 

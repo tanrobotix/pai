@@ -3,8 +3,9 @@
 
 require('module-alias/register');
 require('dotenv').config();
-const fetch = require('node-fetch');
 const AsyncLock = require('async-lock');
+const _ = require('lodash');
+const DatabaseModel = require('openpaidbsdk');
 const { default: PQueue } = require('p-queue');
 const logger = require('@dbc/common/logger');
 const { getEventInformer } = require('@dbc/common/k8s');
@@ -26,14 +27,27 @@ const databaseModel = new DatabaseModel(
 async function synchronizeEvent(eventType, apiObject) {
   // query db instead
   const uid = apiObject.metadata.uid;
-  const type = apiObject.type;
-  const podUid = apiObject.involvedObject.uid
-  const names = apiObject.involvedObject.name.split('-')
-  const frameworkName = names[0]
-  const taskroleName = names[1]
-  const taskIndex = parseInt(names[2])
+  const names = apiObject.involvedObject.name.split('-');
 
-  const message = apiObject.message
+  const obj = {
+    uid: uid,
+    frameworkName: names[0],
+    podUid: apiObject.involvedObject.uid,
+    taskroleName: names[1],
+    taskName: apiObject.involvedObject.name,
+    taskIndex: parseInt(names[2]),
+    type: apiObject.type,
+    reason: apiObject.reason,
+    message: apiObject.message,
+    firstTimestamp: apiObject.firstTimestamp,
+    lastTimestamp: apiObject.lastTimestamp,
+    count: apiObject.count,
+    sourceComponent: _.get(apiObject, 'source.component', null),
+    sourceHost: _.get(apiObject, 'source.host', null),
+    event: JSON.stringify(apiObject),
+  };
+
+  databaseModel.upsert(obj, { where: { uid: uid } });
 }
 
 const eventHandler = (eventType, apiObject) => {
@@ -44,7 +58,10 @@ const eventHandler = (eventType, apiObject) => {
   const involvedObjKind = apiObject.involvedObject.kind;
   const involvedObjName = apiObject.involvedObject.name;
   const uid = apiObject.metadata.uid;
-  if (involvedObjKind === 'Pod' && /^[a-z0-9]{32}-[A-Za-z0-9._~]+-[0-9]+$/.test(involvedObjName)) {
+  if (
+    involvedObjKind === 'Pod' &&
+    /^[a-z0-9]{32}-[A-Za-z0-9._~]+-[0-9]+$/.test(involvedObjName)
+  ) {
     logger.info(
       `Cluster event type=${eventType} receivedTs=${receivedTs} uid=${uid} involvedObjKind=${involvedObjKind} involvedObjName=${involvedObjName} received.`,
     );
@@ -61,7 +78,6 @@ const eventHandler = (eventType, apiObject) => {
       `Cluster Event type=${eventType} receivedTs=${receivedTs} uid=${uid} involvedObjKind=${involvedObjKind} involvedObjName=${involvedObjName} received but ignored.`,
     );
   }
-
 };
 
 const informer = getEventInformer();
@@ -73,8 +89,7 @@ informer.on('update', apiObject => {
   eventHandler('MODIFED', apiObject);
 });
 informer.on('delete', apiObject => {
-  // we ignore event deletion since they are not important to us
-  logger.info(`Event ${apiObject.metadata.uid} is ignored`);
+  eventHandler('DELETED', apiObject);
 });
 informer.on('error', err => {
   // If any error happens, the process should exit, and let Kubernetes restart it.
