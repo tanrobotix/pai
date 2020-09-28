@@ -17,7 +17,6 @@ const configSchema = Joi.object()
     diskPath: Joi.string().required(),
     diskCheckIntervalSecond: Joi.number()
       .integer()
-      .default(60)
       .required(),
     maxDiskUsagePercent: Joi.number().integer().required(),
   })
@@ -28,6 +27,7 @@ const config = {
   maxDatabaseConnection: parseInt(process.env.MAX_DB_CONNECTION),
   maxRpcConcurrency: parseInt(process.env.MAX_RPC_CONCURRENCY),
   diskPath: process.env.DISK_PATH,
+  diskCheckIntervalSecond: 60,
   maxDiskUsagePercent: parseInt(process.env.MAX_DISK_USAGE_PERCENT),
 };
 
