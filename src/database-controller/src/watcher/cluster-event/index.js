@@ -10,7 +10,7 @@ const { default: PQueue } = require('p-queue');
 const logger = require('@dbc/common/logger');
 const { getEventInformer } = require('@dbc/common/k8s');
 const { alwaysRetryDecorator } = require('@dbc/common/util');
-const config = require('@dbc/watcher/framework/config');
+const config = require('@dbc/watcher/cluster-event/config');
 
 // Here, we use AsyncLock to control the concurrency of events with the same uid;
 // e.g. If one event has ADDED, MODIFED, and MODIFED incidents, we use AsyncLock
