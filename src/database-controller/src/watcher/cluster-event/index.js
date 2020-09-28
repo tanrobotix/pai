@@ -133,3 +133,5 @@ async function main() {
   startInformer();
   startDiskCheck();
 }
+
+main()
