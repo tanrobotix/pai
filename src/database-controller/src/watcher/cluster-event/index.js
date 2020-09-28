@@ -47,7 +47,7 @@ async function synchronizeEvent(eventType, apiObject) {
     event: JSON.stringify(apiObject),
   };
 
-  databaseModel.upsert(obj, { where: { uid: uid } });
+  databaseModel.FrameworkEvent.upsert(obj, { where: { uid: uid } });
 }
 
 const eventHandler = (eventType, apiObject) => {
