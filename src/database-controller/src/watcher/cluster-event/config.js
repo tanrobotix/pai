@@ -14,8 +14,8 @@ const configSchema = Joi.object()
     maxRpcConcurrency: Joi.number()
       .integer()
       .required(),
-    diskPath: Joi.string.required(),
-    maxDiskUsagePercent: Joi.number().integer.required(),
+    diskPath: Joi.string().required(),
+    maxDiskUsagePercent: Joi.number().integer().required(),
   })
   .required();
 
