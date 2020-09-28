@@ -170,6 +170,7 @@ class DatabaseModel {
         },
         podUid: Sequelize.STRING(36),
         taskroleName: Sequelize.STRING(256),
+        taskName: Sequelize.STRING(256),
         taskIndex: Sequelize.INTEGER,
         type: {
           type: Sequelize.STRING(32),
