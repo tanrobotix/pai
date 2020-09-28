@@ -7,9 +7,11 @@ const AsyncLock = require('async-lock');
 const _ = require('lodash');
 const DatabaseModel = require('openpaidbsdk');
 const { default: PQueue } = require('p-queue');
+const interval = require('interval-promise');
 const logger = require('@dbc/common/logger');
 const { getEventInformer } = require('@dbc/common/k8s');
 const { alwaysRetryDecorator } = require('@dbc/common/util');
+const disk = require('diskusage');
 const config = require('@dbc/watcher/cluster-event/config');
 
 // Here, we use AsyncLock to control the concurrency of events with the same uid;
@@ -80,21 +82,54 @@ const eventHandler = (eventType, apiObject) => {
   }
 };
 
-const informer = getEventInformer();
 
-informer.on('add', apiObject => {
-  eventHandler('ADDED', apiObject);
-});
-informer.on('update', apiObject => {
-  eventHandler('MODIFED', apiObject);
-});
-informer.on('delete', apiObject => {
-  eventHandler('DELETED', apiObject);
-});
-informer.on('error', err => {
-  // If any error happens, the process should exit, and let Kubernetes restart it.
-  logger.error(err, function() {
-    process.exit(1);
+async function assertDiskUsageHealthy() {
+  try {
+    const {available, total} = await disk.check(config.diskPath);
+    const currentUsage = (total - available) / total * 100;
+    logger.info(`Current internal storage usage is ${currentUsage}% .`)
+    if (currentUsage > config.maxDiskUsagePercent) {
+      logger.error(`Internal storage usage exceeds ${config.maxDiskUsagePercent}%, exit.`,
+        function() {
+          process.exit(1);
+      });
+    }
+  } catch (err) {
+    logger.error(`Check disk usage fails, details: ${err}`,
+      function() {
+        process.exit(1);
+      }
+    )
+  }
+}
+
+function startInformer() {
+  const informer = getEventInformer();
+
+  informer.on('add', apiObject => {
+    eventHandler('ADDED', apiObject);
   });
-});
-informer.start();
+  informer.on('update', apiObject => {
+    eventHandler('MODIFED', apiObject);
+  });
+  informer.on('delete', apiObject => {
+    eventHandler('DELETED', apiObject);
+  });
+  informer.on('error', err => {
+    // If any error happens, the process should exit, and let Kubernetes restart it.
+    logger.error(err, function() {
+      process.exit(1);
+    });
+  });
+  informer.start();
+}
+
+function startDiskCheck() {
+  interval(assertDiskUsageHealthy, config.diskCheckIntervalSecond * 1000, { stopOnError: false });
+}
+
+async function main() {
+  await assertDiskUsageHealthy();
+  startInformer();
+  startDiskCheck();
+}

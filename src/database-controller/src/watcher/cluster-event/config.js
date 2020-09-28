@@ -15,6 +15,10 @@ const configSchema = Joi.object()
       .integer()
       .required(),
     diskPath: Joi.string().required(),
+    diskCheckIntervalSecond: Joi.number()
+      .integer()
+      .default(60)
+      .required(),
     maxDiskUsagePercent: Joi.number().integer().required(),
   })
   .required();
