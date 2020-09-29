@@ -11,7 +11,7 @@ const interval = require('interval-promise');
 const logger = require('@dbc/common/logger');
 const { getEventInformer } = require('@dbc/common/k8s');
 const { alwaysRetryDecorator } = require('@dbc/common/util');
-const disk = require('diskusage');
+// const disk = require('diskusage');
 const config = require('@dbc/watcher/cluster-event/config');
 
 // Here, we use AsyncLock to control the concurrency of events with the same uid;
@@ -129,9 +129,17 @@ function startDiskCheck() {
 }
 
 async function main() {
-  await assertDiskUsageHealthy();
+  // await assertDiskUsageHealthy();
   startInformer();
-  startDiskCheck();
+  // startDiskCheck();
 }
 
 main()
+
+process.on('unhandledRejection', function(reason, p){
+    logger.error(`Encounter unhandled rejection of promise, reason: ${reason}`,
+      function() {
+        process.exit(1);
+      }
+    );
+});
