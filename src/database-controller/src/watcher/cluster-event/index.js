@@ -8,6 +8,7 @@ const _ = require('lodash');
 const DatabaseModel = require('openpaidbsdk');
 const { default: PQueue } = require('p-queue');
 const interval = require('interval-promise');
+require('@dbc/common/init');
 const logger = require('@dbc/common/logger');
 const { getEventInformer } = require('@dbc/common/k8s');
 const { alwaysRetryDecorator } = require('@dbc/common/util');
@@ -135,11 +136,3 @@ async function main() {
 }
 
 main()
-
-process.on('unhandledRejection', function(reason, p){
-    logger.error(`Encounter unhandled rejection of promise, reason: ${reason}`,
-      function() {
-        process.exit(1);
-      }
-    );
-});
