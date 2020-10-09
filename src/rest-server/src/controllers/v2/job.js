@@ -257,7 +257,11 @@ const getEvents = asyncHandler(async (req, res) => {
     'sourceComponent',
     'sourceHost',
   ];
-  const data = await job.getEvents(req.params.frameworkName, attributes, filters);
+  const data = await job.getEvents(
+    req.params.frameworkName,
+    attributes,
+    filters,
+  );
   res.json(data);
 });
 

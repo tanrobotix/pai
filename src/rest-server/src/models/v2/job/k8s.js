@@ -1264,7 +1264,7 @@ const getEvents = async (frameworkName, attributes, filters) => {
 
   if (framework) {
     filters.frameworkName = name;
-    events = await databaseModel.FrameworkEvent.findAll({
+    const events = await databaseModel.FrameworkEvent.findAll({
       attributes: attributes,
       where: filters,
       order: [['lastTimestamp', 'DESC']],
@@ -1272,9 +1272,9 @@ const getEvents = async (frameworkName, attributes, filters) => {
     return {
       // we use events.length as totolCount because paging is not supported
       // if paging is enabled in the future, we should fire another SQL request to get the real total count
-      'totalCount': events.length,
-      'data': events,
-    }
+      totalCount: events.length,
+      data: events,
+    };
   } else {
     throw createError(
       'Not Found',
