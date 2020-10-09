@@ -1402,13 +1402,13 @@ paths:
       tags:
         - job
       summary: Get events of a job.
-      description: Get events of a job.
+      description: Get events of a job. The events are sorted by "lastTimestamp,DESC".
       operationId: getEvents
       security:
         - bearerAuth: []
       parameters:
-        - name:
-          in: type
+        - name: type
+          in: query
           description: filter events with type. Could be "Warning" or "Normal".
           schema:
             type: string
