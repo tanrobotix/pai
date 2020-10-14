@@ -1,0 +1,37 @@
+[ 
+    {
+        "method" : "get",
+        "uri_regex" : "^/api/v1/authn/oidc/login",
+        "action" : "permit"
+    },
+    {
+        "method" : "get",
+        "uri_regex" : "^/api/v1/authn/oidc/return",
+        "action" : "permit"
+    },
+    {
+        "method" : "post",
+        "uri_regex" : "^/api/v1/authn/oidc/return",
+        "action" : "permit"
+    },
+    {
+        "method" : "get",
+        "uri_regex" : "^/api/v1/authn/oidc/logout",
+        "action" : "permit"
+    },
+    {
+        "method" : "get",
+        "uri_regex" : "^/api/v2/mp/modules/[^/]+/jsonSchema",
+        "action" : "permit"
+    },
+    {
+        "method" : "all",
+        "uri_regex" : "^/api/",
+        "action" : "check"
+    },
+    {
+        "method" : "all",
+        "uri_regex" : "^/",
+        "action" : "deny"
+    }  
+]

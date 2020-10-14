@@ -1,0 +1,12 @@
+[ 
+    {
+        "method" : "all",
+        "uri_regex" : "^/api/",
+        "action" : "check"
+    },
+    {
+        "method" : "all",
+        "uri_regex" : "^/",
+        "action" : "deny"
+    }  
+]

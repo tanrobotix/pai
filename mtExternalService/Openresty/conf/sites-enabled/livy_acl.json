@@ -1,0 +1,17 @@
+[ 
+    {
+        "method" : "all",
+        "uri_regex" : "^/batches",
+        "action" : "check"
+    },
+    {
+        "method" : "all",
+        "uri_regex" : "^/sessions",
+        "action" : "check"
+    },
+    {
+        "method" : "all",
+        "uri_regex" : "^/",
+        "action" : "deny"
+    }  
+]

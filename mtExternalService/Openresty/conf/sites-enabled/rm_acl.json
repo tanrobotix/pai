@@ -1,0 +1,12 @@
+[ 
+    {
+        "method" : "all",
+        "uri_regex" : "^/ws/v1/cluster",
+        "action" : "check"
+    },
+    {
+        "method" : "all",
+        "uri_regex" : "^/",
+        "action" : "deny"
+    }  
+]

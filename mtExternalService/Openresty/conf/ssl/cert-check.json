@@ -1,0 +1,7 @@
+{
+    "cert_name_enc": "conf\\ssl\\apigw-publiccert.pem.encr",
+    "cert_name_dec": "conf\\ssl\\apigw-publiccert.pem",
+    "key_name_enc": "conf\\ssl\\apigw-privatekey.pem.encr",
+    "key_name_dec": "conf\\ssl\\apigw-privatekey.pem",
+    "ports": [4431,4432,4433,4434,4435,4436,4437]
+}

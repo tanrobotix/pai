@@ -1,0 +1,12 @@
+[
+    {
+        "method" : "all",
+        "uri_regex" : "^/webhdfs/v1/",
+        "action" : "check"
+    },
+    {
+        "method" : "all",
+        "uri_regex" : "^/",
+        "action" : "deny"
+    }
+]

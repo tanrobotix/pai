@@ -1,0 +1,47 @@
+#schema
+{
+    "type": "array",
+    "items": {
+        "type": "object",
+        "description": "One acl rule item",
+        "properties": {
+            "method": {
+                "description": "http request method",
+                "type": "string",
+                "enum": ["all", "get", "post", "put", "delete"]
+            },
+            "uri_regex": {
+                "description": "http request url in regex pattern",
+                "type": "string"
+            },
+            "action": {
+                "description": "http request action",
+                "type": "string",
+                "enum": ["permit", "deny", "check"]
+            }
+        }
+    }
+}
+#example
+[ 
+    {
+        "method" : "get",
+        "uri_regex" : "/api/",
+        "action" : "permit"
+    },
+    {
+        "method" : "all",
+        "uri_regex" : "/api/[^/]*/vv/",
+        "action" : "permit"
+    },    
+    {
+        "method" : "all",
+        "uri_regex" : "/api/[^/]*/",
+        "action" : "permit"
+    },    
+    {
+        "method" : "all",
+        "uri_regex" : "^/v1",
+        "action" : "deny"
+    }  
+]
